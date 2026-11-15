@@ -1,0 +1,86 @@
+---
+import { projects } from '../data/portfolio';
+import '../styles/global.css';
+import Wave from './Wave.astro';
+import Logo from './Logo.astro';
+import { Image } from 'astro:assets';
+interface Props { lang: 'en' | 'uk' | 'es' }
+const { lang } = Astro.props;
+const canonical = new URL(lang === 'en' ? '/' : `/${lang}/`, Astro.site!);
+const title = { en: 'Maksym — Engineer', uk: 'Максим — Інженер', es: 'Maksym — Ingeniero' }[lang];
+const description = { en: 'Maksym — engineer. Personal portfolio and projects.', uk: 'Максим — інженер. Персональне портфоліо та проєкти.', es: 'Maksym — ingeniero. Portafolio personal y proyectos.' }[lang];
+const ogLocales = { en: 'en_US', uk: 'uk_UA', es: 'es_ES' };
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content={description} />
+<meta name="theme-color" content="#f8f9fe" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<link rel="canonical" href={canonical} />
+<link rel="alternate" hreflang="en" href={new URL('/', Astro.site!)} />
+<link rel="alternate" hreflang="uk" href={new URL('/uk/', Astro.site!)} />
+<link rel="alternate" hreflang="es" href={new URL('/es/', Astro.site!)} />
+<link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site!)} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={ogLocales[lang]} />
+{Object.entries(ogLocales).filter(([locale]) => locale !== lang).map(([, value]) => <meta property="og:locale:alternate" content={value} />)}
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" href="/favicon.ico?v=2" sizes="16x16 32x32 48x48" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<title>{title}</title>
+<script is:inline>
+(() => { let theme = 'system'; try { const saved = localStorage.getItem('portfolio-theme'); if (['light','dark','system'].includes(saved)) theme = saved; } catch {} document.documentElement.dataset.theme = theme; document.documentElement.dataset.appearance = (theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) ? 'dark' : 'light'; })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">{lang === 'en' && <span class="en">Skip to content</span>}{lang === 'es' && <span class="es">Saltar al contenido</span>}{lang === 'uk' && <span class="uk">До вмісту</span>}</a>
+<div class="shell">
+<header>
+<a class="wordmark" href="#" aria-label="Maksym"><Logo />maksyms<span class="accent">.dev</span></a>
+<div class="preferences"><div class="languages" role="group" aria-label={lang === 'es' ? 'Idioma' : lang === 'uk' ? 'Мова' : 'Language'}><a data-language="en" href="/" lang="en" hreflang="en" aria-current={lang === 'en' ? 'page' : undefined}>EN</a><span aria-hidden="true">/</span><a data-language="uk" href="/uk/" lang="uk" hreflang="uk" aria-current={lang === 'uk' ? 'page' : undefined}>UA</a><span aria-hidden="true">/</span><a data-language="es" href="/es/" lang="es" hreflang="es" aria-current={lang === 'es' ? 'page' : undefined}>ES</a></div>
+<div class="theme-switch" role="group" aria-label={lang === 'es' ? 'Tema de color' : lang === 'uk' ? 'Тема оформлення' : 'Color theme'}>
+<button type="button" data-theme-choice="light" data-en="Light theme" data-uk="Світла тема" data-es="Tema claro" aria-label={lang === 'es' ? 'Tema claro' : (lang === 'uk' ? 'Світла тема' : 'Light theme')} title={lang === 'es' ? 'Tema claro' : (lang === 'uk' ? 'Світла тема' : 'Light theme')} aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg></button>
+<button type="button" data-theme-choice="dark" data-en="Dark theme" data-uk="Темна тема" data-es="Tema oscuro" aria-label={lang === 'es' ? 'Tema oscuro' : (lang === 'uk' ? 'Темна тема' : 'Dark theme')} title={lang === 'es' ? 'Tema oscuro' : (lang === 'uk' ? 'Темна тема' : 'Dark theme')} aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14A8.5 8.5 0 0 1 10 4a8.5 8.5 0 1 0 10 10Z"/></svg></button>
+<button type="button" data-theme-choice="system" data-en="System theme" data-uk="Системна тема" data-es="Tema del sistema" aria-label={lang === 'es' ? 'Tema del sistema' : (lang === 'uk' ? 'Системна тема' : 'System theme')} title={lang === 'es' ? 'Tema del sistema' : (lang === 'uk' ? 'Системна тема' : 'System theme')} aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></button>
+</div></div>
+</header>
+<main id="main">
+<div class="wave-container"><Wave /></div>
+<section class="hero" id="about" aria-labelledby="intro"><h1 id="intro">{lang === 'en' && <span class="en">Hello, hello<span class="accent">!</span></span>}{lang === 'es' && <span class="es">Hola, hola<span class="accent">!</span></span>}{lang === 'uk' && <span class="uk">Привіт-привіт<span class="accent">!</span></span>}</h1><div class="hero-bottom"><p class="intro-copy">{lang === 'en' && <span class="en">My name is Maksym and I'm an engineer.</span>}{lang === 'es' && <span class="es">Me llamo Maksym y soy ingeniero.</span>}{lang === 'uk' && <span class="uk">Мене звати Максим і я інженер.</span>}</p></div><span class="coordinate" aria-hidden="true">01 — HELLO, WORLD</span></section>
+<section class="section" id="projects" aria-labelledby="work-heading"><div class="section-heading"><div><h2 id="work-heading">{lang === 'en' && <span class="en">My projects</span>}{lang === 'es' && <span class="es">Mis proyectos</span>}{lang === 'uk' && <span class="uk">Мої проєкти</span>}</h2></div><span class="number" aria-hidden="true">02 /</span></div><div class="grid">
+{projects.map((p, i) => {
+const CardTag = p.url ? 'a' : 'article';
+return <CardTag class:list={['card', 'project-row', { 'linked-card': Boolean(p.url) }]} href={p.url}>
+{p.logo ? <div class="project-art logo-art"><Image src={p.logo} alt="" width={320} height={320} widths={[160, 320]} sizes="160px" format="webp" /></div> : <div class:list={['project-art', `art-${i % 3}`]} aria-hidden="true"><span></span><span></span><span></span></div>}
+<div class="project-info"><h3>{lang === 'en' && <span class="en">{p.title.en}</span>}{lang === 'es' && <span class="es">{p.title.es}</span>}{lang === 'uk' && <span class="uk">{p.title.uk}</span>}</h3><p>{lang === 'en' && <span class="en">{p.description.en}</span>}{lang === 'es' && <span class="es">{p.description.es}</span>}{lang === 'uk' && <span class="uk">{p.description.uk}</span>}</p>
+{p.url && <span class="project-url">{new URL(p.url).hostname} <span aria-hidden="true">↗</span></span>}
+{p.tags.length > 0 && <ul class="tags">{p.tags.map(tag => <li>{tag}</li>)}</ul>}
+</div><span class="row-arrow" aria-hidden="true">↗</span>
+</CardTag>;
+})}
+{projects.length === 0 && <article class="card empty"><div class="card-top"><span>IN PROGRESS</span><span aria-hidden="true">↗</span></div><h3>{lang === 'en' && <span class="en">Good things take shape.</span>}{lang === 'es' && <span class="es">Las ideas van tomando forma.</span>}{lang === 'uk' && <span class="uk">Ідеї набувають форми.</span>}</h3><p>{lang === 'en' && <span class="en">My projects will appear here soon.<br />There’s more to come.</span>}{lang === 'es' && <span class="es">Mis proyectos aparecerán aquí pronto.<br />Esto es solo el comienzo.</span>}{lang === 'uk' && <span class="uk">Незабаром тут з’являться мої проєкти.<br />Далі буде.</span>}</p><span class="status"><i aria-hidden="true"></i>{lang === 'en' && <span class="en">Coming soon</span>}{lang === 'es' && <span class="es">Próximamente</span>}{lang === 'uk' && <span class="uk">Незабаром</span>}</span></article>}
+</div></section>
+</main>
+<footer><span>© {new Date().getFullYear()} {lang === 'en' && <span class="en">Maksym</span>}{lang === 'es' && <span class="es">Maksym</span>}{lang === 'uk' && <span class="uk">Максим</span>}</span><span class="status"><i aria-hidden="true"></i>{lang === 'en' && <span class="en">Always a work in progress.</span>}{lang === 'es' && <span class="es">Siempre en evolución.</span>}{lang === 'uk' && <span class="uk">Завжди є що вдосконалити.</span>}</span><a href="#">{lang === 'en' && <span class="en">Back to top ↑</span>}{lang === 'es' && <span class="es">Volver arriba ↑</span>}{lang === 'uk' && <span class="uk">Нагору ↑</span>}</a></footer>
+</div>
+<script>
+const root = document.documentElement;
+const themeButtons = document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]');
+const media = window.matchMedia('(prefers-color-scheme: dark)');
+const save = (key: string, value: string) => { try { localStorage.setItem(key,value); } catch {} };
+function theme() { const value = root.dataset.theme || 'system'; themeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.themeChoice === value))); const dark = value === 'dark' || (value === 'system' && media.matches); root.dataset.appearance = dark ? 'dark' : 'light'; document.querySelector('meta[name="theme-color"]')?.setAttribute('content',dark ? '#0d0f1c' : '#f8f9fe'); }
+function language() { themeButtons.forEach(button => { const label = button.dataset[root.lang] || ''; button.setAttribute('aria-label',label); button.title = label; }); }
+save('portfolio-language', root.lang);
+document.querySelectorAll<HTMLAnchorElement>('[data-language]').forEach(link => link.addEventListener('click', () => save('portfolio-language', link.dataset.language!)));
+themeButtons.forEach(button => button.addEventListener('click',() => { const value = button.dataset.themeChoice!; root.dataset.theme = value; save('portfolio-theme',value); theme(); }));
+media.addEventListener('change',theme);
+theme(); language();
+</script>
+</body>
+</html>
