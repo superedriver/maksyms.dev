@@ -10,6 +10,12 @@ const canonical = new URL(lang === 'en' ? '/' : `/${lang}/`, Astro.site!);
 const title = { en: 'Maksym — Engineer', uk: 'Максим — Інженер', es: 'Maksym — Ingeniero' }[lang];
 const description = { en: 'Maksym — engineer. Personal portfolio and projects.', uk: 'Максим — інженер. Персональне портфоліо та проєкти.', es: 'Maksym — ingeniero. Portafolio personal y proyectos.' }[lang];
 const ogLocales = { en: 'en_US', uk: 'uk_UA', es: 'es_ES' };
+const platformLabels = {
+  en: { web: 'Web', available: 'Available', planned: 'Planned' },
+  uk: { web: 'Веб', available: 'Доступно', planned: 'Заплановано' },
+  es: { web: 'Web', available: 'Disponible', planned: 'Previsto' },
+}[lang];
+const storeLabels = { Android: 'Google Play', iOS: 'App Store' };
 ---
 <!doctype html>
 <html lang={lang}>
@@ -54,16 +60,36 @@ const ogLocales = { en: 'en_US', uk: 'uk_UA', es: 'es_ES' };
 <div class="wave-container"><Wave /></div>
 <section class="hero" id="about" aria-labelledby="intro"><h1 id="intro">{lang === 'en' && <span class="en">Hello, hello<span class="accent">!</span></span>}{lang === 'es' && <span class="es">Hola, hola<span class="accent">!</span></span>}{lang === 'uk' && <span class="uk">Привіт-привіт<span class="accent">!</span></span>}</h1><div class="hero-bottom"><p class="intro-copy">{lang === 'en' && <span class="en">My name is Maksym and I'm an engineer.</span>}{lang === 'es' && <span class="es">Me llamo Maksym y soy ingeniero.</span>}{lang === 'uk' && <span class="uk">Мене звати Максим і я інженер.</span>}</p></div><span class="coordinate" aria-hidden="true">01 — HELLO, WORLD</span></section>
 <section class="section" id="projects" aria-labelledby="work-heading"><div class="section-heading"><div><h2 id="work-heading">{lang === 'en' && <span class="en">My projects</span>}{lang === 'es' && <span class="es">Mis proyectos</span>}{lang === 'uk' && <span class="uk">Мої проєкти</span>}</h2></div><span class="number" aria-hidden="true">02 /</span></div><div class="grid">
-{projects.map((p, i) => {
-const CardTag = p.url ? 'a' : 'article';
-return <CardTag class:list={['card', 'project-row', { 'linked-card': Boolean(p.url) }]} href={p.url}>
+{projects.map((p, i) => (
+<article class="card project-row">
 {p.logo ? <div class="project-art logo-art"><Image src={p.logo} alt="" width={320} height={320} widths={[160, 320]} sizes="160px" format="webp" /></div> : <div class:list={['project-art', `art-${i % 3}`]} aria-hidden="true"><span></span><span></span><span></span></div>}
 <div class="project-info"><h3>{lang === 'en' && <span class="en">{p.title.en}</span>}{lang === 'es' && <span class="es">{p.title.es}</span>}{lang === 'uk' && <span class="uk">{p.title.uk}</span>}</h3><p>{lang === 'en' && <span class="en">{p.description.en}</span>}{lang === 'es' && <span class="es">{p.description.es}</span>}{lang === 'uk' && <span class="uk">{p.description.uk}</span>}</p>
-{p.url && <span class="project-url">{new URL(p.url).hostname} <span aria-hidden="true">↗</span></span>}
+{p.url && <a class="project-url" href={p.url}><span>{new URL(p.url).hostname}</span><span aria-hidden="true">↗</span></a>}
 {p.tags.length > 0 && <ul class="tags">{p.tags.map(tag => <li>{tag}</li>)}</ul>}
-</div><span class="row-arrow" aria-hidden="true">↗</span>
-</CardTag>;
-})}
+{p.platforms && p.platforms.length > 0 && (
+  <ul class="project-platforms" role="list">
+    {p.platforms.map(({ name, status, url }) => {
+      const label = name === 'web'
+        ? url ? new URL(url).hostname : platformLabels.web
+        : storeLabels[name];
+      return (
+        <li data-status={status}>
+          {url ? (
+            <a href={url} target="_blank" rel="noopener">{label} <span aria-hidden="true">↗</span></a>
+          ) : (
+            <span title={platformLabels[status]}>
+              {label} <span aria-hidden="true">↗</span>
+              <span class="sr-only"> · {platformLabels[status]}</span>
+            </span>
+          )}
+        </li>
+      );
+    })}
+  </ul>
+)}
+</div>
+</article>
+))}
 {projects.length === 0 && <article class="card empty"><div class="card-top"><span>IN PROGRESS</span><span aria-hidden="true">↗</span></div><h3>{lang === 'en' && <span class="en">Good things take shape.</span>}{lang === 'es' && <span class="es">Las ideas van tomando forma.</span>}{lang === 'uk' && <span class="uk">Ідеї набувають форми.</span>}</h3><p>{lang === 'en' && <span class="en">My projects will appear here soon.<br />There’s more to come.</span>}{lang === 'es' && <span class="es">Mis proyectos aparecerán aquí pronto.<br />Esto es solo el comienzo.</span>}{lang === 'uk' && <span class="uk">Незабаром тут з’являться мої проєкти.<br />Далі буде.</span>}</p><span class="status"><i aria-hidden="true"></i>{lang === 'en' && <span class="en">Coming soon</span>}{lang === 'es' && <span class="es">Próximamente</span>}{lang === 'uk' && <span class="uk">Незабаром</span>}</span></article>}
 </div></section>
 </main>

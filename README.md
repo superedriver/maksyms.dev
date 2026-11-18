@@ -45,7 +45,7 @@ import projectLogo from '../assets/project-logo.png';
 logo: projectLogo,
 ```
 
-Astro generates optimized WebP variants during the build. The existing Flashcards entry shows a complete example. Project cards are horizontal, with the logo on the left. When `url` is set, the entire card is a link. Without a logo, the card uses a decorative illustration. Set `tags: []` to hide technology tags. Empty projects show a coming-soon card.
+Astro generates optimized WebP variants during the build. The existing Flashcards entry shows a complete example. Project cards are horizontal, with the logo on the left. When `url` is set, the card displays the hostname as a link. Without a logo, the card uses a decorative illustration. Set `tags: []` to hide technology tags. Empty projects show a coming-soon card.
 
 ## Structure and languages
 

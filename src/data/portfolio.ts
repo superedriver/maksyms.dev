@@ -1,7 +1,8 @@
 ﻿export const profile = { email: '', socials: [] as { label: string; url: string }[] };
 import type { ImageMetadata } from 'astro';
 import flashcardsLogo from '../assets/flashcards.png';
-export type Project = { title: { en: string; uk: string; es: string }; description: { en: string; uk: string; es: string }; tags: string[]; url?: string; logo?: ImageMetadata };
+type ProjectPlatform = { name: 'web' | 'Android' | 'iOS'; status: 'available' | 'planned'; url?: string };
+export type Project = { title: { en: string; uk: string; es: string }; description: { en: string; uk: string; es: string }; tags: string[]; url?: string; logo?: ImageMetadata; platforms?: ProjectPlatform[] };
 // Add real projects here; each project needs English, Ukrainian, and Spanish text.
 export const projects: Project[] = [{
   title: { en: 'Flashcards', uk: 'Flashcards', es: 'Flashcards' },
@@ -11,6 +12,10 @@ export const projects: Project[] = [{
     es: 'Flashcards - una aplicación para aprender idiomas con tarjetas, repetición espaciada y sesiones de estudio personalizadas.',
   },
   tags: [],
-  url: 'https://flashcards.maksyms.dev',
+  platforms: [
+    { name: 'web', status: 'available', url: 'https://flashcards.maksyms.dev' },
+    { name: 'Android', status: 'planned' },
+    { name: 'iOS', status: 'planned' },
+  ],
   logo: flashcardsLogo,
 }];
